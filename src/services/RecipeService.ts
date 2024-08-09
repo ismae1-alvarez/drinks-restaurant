@@ -1,5 +1,6 @@
 import axios from "axios";
-import { CategoriesAPIResponseSchema } from "../utils/recipes-schema";
+import { CategoriesAPIResponseSchema, DrinksAPIResponse, RecipeAPIResponseSchema } from "../utils/recipes-schema";
+import { Drink, SearchFilter } from "../types";
 
 export async function getCategories(){
     const url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
@@ -9,3 +10,22 @@ export async function getCategories(){
     if(result.success) return result.data;
 
 };
+
+export  async function getRecipes(filter:SearchFilter){
+    const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${filter.category}&i=${filter.ingredient}`;
+    const {data} =  await axios(url);
+    const result = DrinksAPIResponse.safeParse(data);
+
+    if(result.success) return result.data;
+};
+
+
+
+export async function getRecipesById (id:Drink['idDrink']){
+    const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+    const {data} =  await axios(url);
+    const result  = RecipeAPIResponseSchema.safeParse(data.drinks[0]);
+
+    if(result.success) return result.data;
+}
+// www.thecocktaildb.com/api/json/v1/1/lookup.php?i=11007

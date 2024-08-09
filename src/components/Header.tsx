@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import {  NavLink, useLocation } from "react-router-dom"
 import { useAppStore } from "../stores/useAppStore";
 
@@ -13,6 +13,7 @@ function Header() {
 
   const fetchCategories =  useAppStore((state)=> state.fetchCategories);
   const getCategories =  useAppStore((state) => state.categories);
+  const search =  useAppStore((state) => state.searchRecipe);
 
   useEffect(()=>{
     fetchCategories();
@@ -23,6 +24,18 @@ function Header() {
       ...serchFilters, 
       [e.target.name] : e.target.value
     })
+  };
+
+  const handleSubmit = (e:FormEvent<HTMLFormElement>)=>{
+    e.preventDefault();
+
+    if(Object.values(serchFilters).includes('')) {
+      return console.log("Todos los son obligatorios")
+    }
+
+    search(serchFilters)
+
+
   };
 
 
@@ -52,7 +65,7 @@ function Header() {
 
           </div>
             { isHome && (
-              <form className="md:w-1/2 2xl:w-1/3 bg-orange-400 my-32 py-10 rounded-lg space-y-6 p-10">
+              <form onSubmit={handleSubmit} className="md:w-1/2 2xl:w-1/3 bg-orange-400 my-32 py-10 rounded-lg space-y-6 p-10">
                 <div className="space-y-5">
                   <label 
                     htmlFor="ingredient" 
