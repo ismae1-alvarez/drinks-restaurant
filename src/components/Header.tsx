@@ -1,10 +1,30 @@
-import { useMemo } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import {  NavLink, useLocation } from "react-router-dom"
+import { useAppStore } from "../stores/useAppStore";
 
 function Header() {
   const {pathname} =  useLocation();
-
   const isHome =  useMemo(()=> pathname === '/', [ pathname]);
+
+  const [serchFilters, setSerchFilters] = useState({
+    ingredient : '', 
+    category : ''
+  });
+
+  const fetchCategories =  useAppStore((state)=> state.fetchCategories);
+  const getCategories =  useAppStore((state) => state.categories);
+
+  useEffect(()=>{
+    fetchCategories();
+  }, []);
+
+  const handleChange = (e:ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
+    setSerchFilters({
+      ...serchFilters, 
+      [e.target.name] : e.target.value
+    })
+  };
+
 
   return (
     <header className={isHome ? "bg-header bg-cover bg-center" :"bg-slate-800" }>
@@ -35,7 +55,7 @@ function Header() {
               <form className="md:w-1/2 2xl:w-1/3 bg-orange-400 my-32 py-10 rounded-lg space-y-6 p-10">
                 <div className="space-y-5">
                   <label 
-                    htmlFor="categoria" 
+                    htmlFor="ingredient" 
                     className="block text-white uppercase font-extrabold text-lg"
                   >Nombre o Ingrediente</label>
 
@@ -45,21 +65,30 @@ function Header() {
                     name="ingredient" 
                     className="p-3 w-fulll rounded-lg focus:outline-none" 
                     placeholder="Nombre o Ingrediente. Ej. Vodka, Tequila, Cafe"
+                    onChange={handleChange}
+                    value={serchFilters.ingredient}
                   />
                 </div>
 
                 <div className="space-y-5">
                   <label 
-                    htmlFor="ingreient" 
+                    htmlFor="category" 
                     className="block text-white uppercase font-extrabold text-lg"
                   >Categoria</label>
 
                   <select 
-                    id="ingredient" 
-                    name="ingredient" 
+                    id="category" 
+                    name="category" 
                     className="p-3 w-fulll rounded-lg focus:outline-none" 
+                    onChange={handleChange}
+                    value={serchFilters.category}
                   >
                     <option value="">-- Seleccione ---</option>
+                    {
+                      getCategories.drinks.map(drink =>(
+                        <option key={drink.strCategory} value={drink.strCategory}>{drink.strCategory}</option>
+                      ))
+                    }
 
                   </select>
                 </div>
