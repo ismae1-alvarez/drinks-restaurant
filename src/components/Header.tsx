@@ -11,9 +11,7 @@ function Header() {
     category : ''
   });
 
-  const fetchCategories =  useAppStore((state)=> state.fetchCategories);
-  const getCategories =  useAppStore((state) => state.categories);
-  const search =  useAppStore((state) => state.searchRecipe);
+  const {fetchCategories,categories, searchRecipe,  showNotification} =  useAppStore((state)=> state);
 
   useEffect(()=>{
     fetchCategories();
@@ -30,11 +28,10 @@ function Header() {
     e.preventDefault();
 
     if(Object.values(serchFilters).includes('')) {
-      return console.log("Todos los son obligatorios")
+      return showNotification({text: "Todos los cmapos son necesarsios", error :true})
     }
 
-    search(serchFilters)
-
+    searchRecipe(serchFilters)
 
   };
 
@@ -98,7 +95,7 @@ function Header() {
                   >
                     <option value="">-- Seleccione ---</option>
                     {
-                      getCategories.drinks.map(drink =>(
+                      categories.drinks.map(drink =>(
                         <option key={drink.strCategory} value={drink.strCategory}>{drink.strCategory}</option>
                       ))
                     }

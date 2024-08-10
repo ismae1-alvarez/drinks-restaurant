@@ -5,7 +5,7 @@ import { Recipe } from '../types';
 
 export default function Modal() {
 
-   const {modal, closeModal, selectedRecipe} =  useAppStore(state=> state);
+   const {modal, closeModal, selectedRecipe, handlClickFavorite, favoriteExists} =  useAppStore(state=> state);
 
    const rednderIngredients = ()=>{
 
@@ -73,8 +73,8 @@ export default function Modal() {
                       Cerrar
                     </button>
 
-                    <button type='button' className='w-full rounded bg-orange-600 p-3 font-bold uppercase text-white shadow hover:bg-orange-500'>
-                      Agregar a Favoritos
+                    <button type='button' className='w-full rounded bg-orange-600 p-3 font-bold uppercase text-white shadow hover:bg-orange-500' onClick={()=> handlClickFavorite(selectedRecipe)}>
+                      {favoriteExists(selectedRecipe.idDrink) ? 'Eliminar Favorito' :'Agregar a Favoritos'}
                     </button>
                   </div>
                 </Dialog.Panel>

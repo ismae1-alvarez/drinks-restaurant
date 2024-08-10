@@ -4,9 +4,10 @@ import DrinkCard from "../components/DrinkCard";
 
 
 function IndexPage() {
-  const drinks =  useAppStore((state) => state.drinks);
+  const {drinks} =  useAppStore((state) => state);
 
   const hashDrinks =  useMemo(()=> drinks.drinks.length, [drinks])
+
 
 
   return (
